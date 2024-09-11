@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/intercambio.css') }}">
+    <script src="{{ url_for('static', filename='scripts/menu.js') }}" defer></script>
+    <title>Formulario de Intercambio</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulario de Intercambio</h1>
+        <a href="{{ url_for('index') }}" class="btn-back">Volver al Principal</a>
+        <form id="intercambioForm" action="/submit_intercambio" method="post">
+            <div class="form-group">
+                <label for="fecha_solicitud">Fecha de Solicitud:</label>
+                <input type="date" id="fecha_solicitud" name="fecha_solicitud" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="fecha_ejecucion_1">Fecha de Ejecución 1:</label>
+                <input type="date" id="fecha_ejecucion_1" name="fecha_ejecucion[]" required>
+            </div>
+            
+            <button type="button" id="add_date_button">Añadir otra fecha</button>
+            
+            <div class="form-group">
+                <label for="numero_intercambio">Número de Intercambio:</label>
+                <input type="text" id="numero_intercambio" name="numero_intercambio" placeholder="Escriba el número de intercambio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_operador">Tipo de Operador:</label>
+                <select id="id_operador" name="id_operador" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="1">UNION TEMPORAL CONSTRUYENDO JUNTOS 2024</option>
+                    <option value="2">FUNDACION PRO DESARROLLO COMUNITARIO POR COLOMBIA</option>
+                    <option value="3">CORPORACION HACIA UN VALLE SOLIDARIO</option>
+                    <option value="4">UNION TEMPORAL NUTRIENDO CALI 2024</option>
+                </select>
+            </div>       
+
+            <div class="form-group">
+                <label for="justificacion">Justificación:</label>
+                <textarea id="justificacion" name="justificacion" rows="4" placeholder="Escriba la justificación" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="institucion">Institución Educativa Principal:</label>
+                <select id="institucion" name="institucion" onchange="cargarSedes()" required>
+                    <option value="">Seleccione una opción</option>
+                    {% for institucion in instituciones %}
+                    <option value="{{ institucion.id_institucion }}">{{ institucion.sede_educativa }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sedes">Sedes:</label>
+                <div id="sedes" class="checkbox-group">
+                    <!-- Las sedes se cargarán aquí mediante JavaScript -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_racion">Tipo de Ración:</label>
+                <select id="tipo_racion" name="tipo_racion" required onchange="cargarMenus()">
+                    <option value="">Seleccione una opción</option>
+                    <option value="1">INDUSTRIALIZADO</option>
+                    <option value="2">PREPARADO EN SITIO AM</option>
+                    <option value="3">PREPARADO EN SITIO PM</option>
+                    <option value="4">JORNADA ÚNICA</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="numero_menu_oficial">Número de Menú Oficial:</label>
+                <select id="numero_menu_oficial" name="numero_menu_oficial" required onchange="cargarDetallesMenu()">
+                    <option value="">Seleccione una opción</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="numero_menu_intercambio">Número de Menú Intercambio:</label>
+                <select id="numero_menu_intercambio" name="numero_menu_intercambio" required onchange="cargarDetallesMenu()">
+                    <option value="">Seleccione una opción</option>
+                </select>
+            </div>
+
+            <h2>Detalles del Menú de Intercambio</h2>
+            <table id="menuDetailsTable" class="menu-table">
+                <thead>
+                    <tr>
+                        <th>Componentes</th>
+                        <th>Ingredientes</th>
+                        <th>Ingredientes (Intercambio)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Los detalles del menú se cargarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
+            <button type="button" onclick="saveChanges()" class="btn-submit">Guardar cambios</button>
+        </form>
+    </div>
+    <script>
+        function cargarMenus() {
+            const tipoRacion = document.getElementById('tipo_racion').value;
+            if (tipoRacion) {
+                fetch(`/get_menus?tipo_racion=${tipoRacion}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // Verifica la respuesta del servidor
+                        const menuOficialSelect = document.getElementById('numero_menu_oficial');
+                        const menuIntercambioSelect = document.getElementById('numero_menu_intercambio');
+                        menuOficialSelect.innerHTML = '<option value="">Seleccione una opción</option>';
+                        menuIntercambioSelect.innerHTML = '<option value="">Seleccione una opción</option>';
+                        
+                        data.forEach(menu => {
+                            const option = document.createElement('option');
+                            option.value = menu.numero_menu;
+                            option.textContent = menu.numero_menu;
+                            menuOficialSelect.appendChild(option);
+                            menuIntercambioSelect.appendChild(option.cloneNode(true)); 
+                        });
+                    });
+            }
+        }
+
+        function cargarDetallesMenu() {
+            const numeroMenuOficial = document.getElementById('numero_menu_oficial').value;
+            const numeroMenuIntercambio = document.getElementById('numero_menu_intercambio').value;
+            if (numeroMenuOficial && numeroMenuIntercambio) {
+                fetch(`/get_menu_details?numero_menu_oficial=${numeroMenuOficial}&numero_menu_intercambio=${numeroMenuIntercambio}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // Verifica la respuesta del servidor
+                        const menuDetailsTableBody = document.querySelector('#menuDetailsTable tbody');
+                        menuDetailsTableBody.innerHTML = '';
+                        
+                        data.forEach(item => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${item.componente}</td>
+                                <td>${item.ingredientes}</td>
+                                <td>${item.ingredientes_intercambio}</td>
+                            `;
+                            menuDetailsTableBody.appendChild(row);
+                        });
+                    });
+            }
+        }
+
+        document.getElementById('add_date_button').addEventListener('click', () => {
+            const fechaEjecucionInput = document.createElement('div');
+            fechaEjecucionInput.className = 'form-group';
+            fechaEjecucionInput.innerHTML = `
+                <label for="fecha_ejecucion">Fecha de Ejecución:</label>
+                <input type="date" name="fecha_ejecucion[]" required>
+            `;
+            document.querySelector('#intercambioForm').insertBefore(fechaEjecucionInput, document.querySelector('#add_date_button'));
+        });
+
+        function saveChanges() {
+            const form = document.getElementById('intercambioForm');
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                if (data[key]) {
+                    if (!Array.isArray(data[key])) {
+                        data[key] = [data[key]];
+                    }
+                    data[key].push(value);
+                } else {
+                    data[key] = value;
+                }
+            });
+            
+            fetch('/submit_intercambio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

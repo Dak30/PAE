@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infraestructura - PAE</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/scripts/cargar_sedes.js"></script> <!-- Verifica que esta ruta sea correcta -->
+    <link rel="stylesheet" href="/static/styles/infraestructura.css"> <!-- Incluye el archivo CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Establecer la fecha actual
+            var today = new Date().toISOString().split('T')[0];
+            $('#fecha').val(today);
+        });
+    </script>
+</head>
+<body>
+    <h1>DIAGNÓSTICO Y CARACTERIZACIÓN DE INFRAESTRUCTURA Y DOTACIÓN DE UNIDADES DE SERVICIO - PAE</h1>
+    <a href="{{ url_for('index') }}" class="btn-back">Volver al Principal</a>
+    <form method="POST" action="/guardar_infraestructura">
+        <!-- Campos del formulario -->
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required><br>
+
+        <label for="municipio">Municipio:</label>
+        <input type="text" id="municipio" name="municipio" required><br>
+
+        <label for="corregimiento">Corregimiento:</label>
+        <input type="text" id="corregimiento" name="corregimiento" required><br>
+
+        <label for="vereda">Vereda:</label>
+        <input type="text" id="vereda" name="vereda" required><br>
+
+        <label for="operador">Operador:</label>
+        <select id="operador" name="operador" required>
+            <option value="">Seleccione una opción</option>
+            {% for operador in operadores %}
+                <option value="{{ operador }}">{{ operador }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="institucion">Institución Educativa:</label>
+        <div class="select-wrapper">
+            <select id="institucion" name="institucion" required>
+                <option value="">Seleccione una opción</option>
+                {% for institucion in instituciones %}
+                    <option value="{{ institucion.id }}">{{ institucion.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+
+
+        <label>Sedes:</label>
+        <select id="sede" name="sede" required>
+            <option value="">Seleccione una opción</option>
+            {% for sede in sedes %}
+                <option value="{{ sede.id }}">{{ sede.nombre }}</option>
+            {% endfor %}
+        </select>
+        
+
+        <label for="codigo_sede">Código de Sede:</label>
+        <input type="text" id="codigo_sede" name="codigo_sede" readonly><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" readonly><br>
+
+        <label for="barrio">Barrio:</label>
+        <input type="text" id="barrio" name="barrio" required><br>
+
+        <label for="comuna">Comuna:</label>
+        <input type="text" id="comuna" name="comuna" readonly><br>
+
+        <label for="zona">Zona:</label>
+        <input type="text" id="zona" name="zona" readonly><br>
+
+        <label for="tipo_racion">Tipo de Ración:</label>
+        <select id="tipo_racion" name="tipo_racion" required>
+            <option value="">Seleccione una opción</option>
+            {% for tipo in tipo_racion %}
+                <option value="{{ tipo }}">{{ tipo }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="focalizacion">Focalización:</label>
+        <input type="number" id="focalizacion" name="focalizacion" required><br>
+
+        <h3>Aspectos a Evaluar</h3>
+
+        <h4>Todos los servicios de alimentación escolar deberán cumplir las exigencias establecidas en la reglamentación técnico-sanitaria Resolución 2674 de 2013 y Resolución 00335 del 2021, que establece las normas de higiene para la elaboración, distribución y consumo de alimentos. Diligenciar con letra legible.</h4>
+
+        <h2>1. INFRAESTRUCTURA</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_1_1">1.1 - La unidad de servicio se encuentra aislada de focos de insalubridad, en un lugar fuera de riesgos de inundación u otra situación atribuible al medio ambiente</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_1_1" name="verificacion_1_1">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="null">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_1_1" name="observacion_1_1" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">s
+            <label for="verificacion_1_2">1.2 - Existe separación física de las áreas de almacenamiento, preparación, distribución y servicios sanitarios</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_1_2" name="verificacion_1_2">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="null">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_1_2" name="observacion_1_2" placeholder="Observaciones">
+            </div>
+        </div>
+        <div class="verificacion-group">
+        <label for="verificacion_1_3">1.3 - Se encuentra identificada la ruta de evacuacion, las salidas de emergencia y los punto de encuentro en todas las áreas del comedor</label>
+            <div class="verificacion-controls">
+            <select id="verificacion_1_3" name="verificacion_1_3">
+                <option value="1">Cumple</option>
+                <option value="0">No Cumple</option>
+                <option value="0">No Aplica</option>
+            </select>
+                <input type="text" id="observacion_1_3" name="observacion_1_3" placeholder="Observaciones"><br></label>
+            </div>
+        </div>
+        <div class="verificacion-group">
+        <label for="verificacion_1_4">1.4 - Se cuenta con servicio de lavado de manos para los titulares de derecho y está en buen estado.</label>
+        <div class="verificacion-controls">
+        <select id="verificacion_1_4" name="verificacion_1_4">
+            <option value="1">Cumple</option>
+            <option value="0">No Cumple</option>
+            <option value="0">No Aplica</option>
+        </select>
+        <input type="text" id="observacion_1_4" name="observacion_1_4" placeholder="Observaciones"><br>
+            </div>
+        </div>
+
+        <h2>2. ÁREA DE PREPARACIÓN DE ALIMENTOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_2_1">2.1 - Existe área de preparación. Especificar área en m²:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_1" name="verificacion_2_1">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_1" name="observacion_2_1" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_2_2">2.2 - Las paredes del área son lisas y de fácil limpieza y desinfección, sin presencia de humedad:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_2" name="verificacion_2_2">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_2" name="observacion_2_2" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_3">2.3 - El piso del área de preparación está construido en material de fácil limpieza y desinfección, sin presencia de grietas u orificios:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_3" name="verificacion_2_3">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_3" name="observacion_2_3" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_4">2.4 - El techo del área de preparación está construido en material de fácil limpieza y desinfección, sin presencias de humedad ni goteras:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_4" name="verificacion_2_4">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_4" name="observacion_2_4" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_5">2.5 - Los mesones para preparar los alimentos son de material de fácil limpieza y desinfección. Enuncie el material y el estado de los mesones:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_5" name="verificacion_2_5">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_5" name="observacion_2_5" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_6">2.6 - Cuenta con sifones y rejillas anticucarachas. Especifique el estado:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_6" name="verificacion_2_6">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_6" name="observacion_2_6" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_7">2.7 - Cuenta con lavaplatos y suministro de agua. Especifique el estado:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_7" name="verificacion_2_7">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_7" name="observacion_2_7" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_8">2.8 - Las ventanas que se comunican con el medio exterior se encuentran provistas de mallas antinsectos de fácil limpieza:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_8" name="verificacion_2_8">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_8" name="observacion_2_8" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_9">2.9 - Cuenta con ventilación en las áreas de preparación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_9" name="verificacion_2_9">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_9" name="observacion_2_9" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_10">2.10 - Cuenta con lámparas y bombillos y están debidamente protegidos en caso de ruptura:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_10" name="verificacion_2_10">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_10" name="observacion_2_10" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_2_11">2.11 - Las instalaciones eléctricas del servicio se encuentran protegidas y ubicadas adecuadamente:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2_11" name="verificacion_2_11">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2_11" name="observacion_2_11" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <h2>3. AREA DE ALMACENAMIENTO DE ALIMENTOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_1">3.1 - Existe área de almacenamiento. Especificar área en M²:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_1" name="verificacion_3_1">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_1" name="observacion_3_1" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_2">3.2 - Las paredes del área son lisas y de fácil limpieza y desinfección, sin presencia de humedad:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_2" name="verificacion_3_2">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_2" name="observacion_3_2" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_3">3.3 - El piso del área de almacenamiento está construido en material de fácil limpieza y desinfección, sin presencias de grietas u orificios:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_3" name="verificacion_3_3">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_3" name="observacion_3_3" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_4">3.4 - El techo del área de almacenamiento está construido en material de fácil limpieza y desinfección, sin presencias de humedad ni goteras:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_4" name="verificacion_3_4">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_4" name="observacion_3_4" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_5">3.5 - Las ventanas que se comunican con el medio exterior se encuentran provistas de mallas antinsectos de fácil limpieza y desinfección:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_5" name="verificacion_3_5">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_5" name="observacion_3_5" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_6">3.6 - El área de almacenamiento cuenta con ventilación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_6" name="verificacion_3_6">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_6" name="observacion_3_6" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_7">3.7 - Se cuenta con anaqueles, recipientes debidamente marcados y tapados, estantes o mesones para almacenar los alimentos de manera adecuada en material de fácil limpieza que no permitan la contaminación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_7" name="verificacion_3_7">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_7" name="observacion_3_7" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_8">3.8 - Se cuenta con estibas o canastilla base limpias para almacenar los alimentos, en material de fácil limpieza que no permita la contaminación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_8" name="verificacion_3_8">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_8" name="observacion_3_8" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_9">3.9 - Cuenta con lámparas, bombillos y están debidamente protegidos en caso de ruptura:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_9" name="verificacion_3_9">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_9" name="observacion_3_9" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3_10">3.10 - Las instalaciones eléctricas del servicio se encuentran protegidas y ubicadas adecuadamente:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3_10" name="verificacion_3_10">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3_10" name="observacion_3_10" placeholder="Observaciones">
+            </div>
+        </div>
+       
+        <h2>4. AREA DISTRIBUCIÓN DE ALIMENTOS O COMEDOR </h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_4_1">4.1 - Existe área de distribución. Especifique área en M²:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_1" name="verificacion_4_1">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_1" name="observacion_4_1" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_2">4.2 - El piso del área de distribución está construido en material de fácil limpieza y desinfección, sin presencias de grietas u orificios:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_2" name="verificacion_4_2">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_2" name="observacion_4_2" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_3">4.3 - El techo del área de distribución está construido en material de fácil limpieza y desinfección:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_3" name="verificacion_4_3">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_3" name="observacion_4_3" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_4">4.4 - El área del comedor cuenta con ventilación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_4" name="verificacion_4_4">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_4" name="observacion_4_4" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_5">4.5 - El área del comedor cuenta con iluminación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_5" name="verificacion_4_5">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_5" name="observacion_4_5" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_6">4.6 - El área del comedor cuenta con sillas. Especifique Nro de sillas, material y estado:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_6" name="verificacion_4_6">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_6" name="observacion_4_6" placeholder="Nro de sillas, material y estado">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_7">4.7 - El área del comedor cuenta con mesas. Especifique Nro de mesas, material y estado:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_7" name="verificacion_4_7">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_7" name="observacion_4_7" placeholder="Nro de mesas, material y estado">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_4_8">4.8 - Las instalaciones eléctricas del servicio se encuentran protegidas y ubicadas adecuadamente:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4_8" name="verificacion_4_8">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4_8" name="observacion_4_8" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <h2>5. INSTALACIONES SANITARIAS Y DE ASEO EN LA IEO</h2>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5_1">5.1 - Las instalaciones sanitarias se encuentran en buen estado y funcionando (lavamanos e inodoro):</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5_1" name="verificacion_5_1">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5_1" name="observacion_5_1" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5_2">5.2 - La ubicación de los servicios sanitarios son aislados del área de preparación o distribución:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5_2" name="verificacion_5_2">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5_2" name="observacion_5_2" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5_3">5.3 - Existen puertas que permitan el aislamiento de las instalaciones sanitarias de las demás áreas:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5_3" name="verificacion_5_3">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5_3" name="observacion_5_3" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5_4">5.4 - Cuenta con área de vestier para el personal manipulador:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5_4" name="verificacion_5_4">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5_4" name="observacion_5_4" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5_5">5.5 - Cuenta con área específica de almacenamiento de los elementos de aseo del servicio, y está identificada:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5_5" name="verificacion_5_5">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5_5" name="observacion_5_5" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5_6">5.6 - La ubicación de los servicios de aseo es accesible y permite su fácil uso:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5_6" name="verificacion_5_6">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5_6" name="observacion_5_6" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <h2>6. REQUISITOS DE SEGURIDAD Y SALUD EN EL TRABAJO</h2>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6_1">6.1 - El área de servicio cuenta con elementos de seguridad (extintor, botiquín, etc.):</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6_1" name="verificacion_6_1">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6_1" name="observacion_6_1" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6_2">6.2 - El personal cuenta con el equipo de protección personal adecuado (guantes, mascarillas, etc.):</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6_2" name="verificacion_6_2">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6_2" name="observacion_6_2" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6_3">6.3 - El personal tiene capacitación en manejo de alimentos y prevención de riesgos:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6_3" name="verificacion_6_3">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6_3" name="observacion_6_3" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6_4">6.4 - El área de servicio tiene una señalización adecuada de seguridad:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6_4" name="verificacion_6_4">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6_4" name="observacion_6_4" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6_5">6.5 - Se cuenta con un plan de emergencia y evacuación:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6_5" name="verificacion_6_5">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6_5" name="observacion_6_5" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6_6">6.6 - Se realiza mantenimiento preventivo y correctivo de los equipos:</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6_6" name="verificacion_6_6">
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="0">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6_6" name="observacion_6_6" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <h2>7. DOTACIÓN DE MENAJE, UTENSILIOS Y EQUIPOS</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ítem</th>
+                    <th>Especifique el N° de elementos y material</th>
+                    <th>Estado</th>
+                    <th>Propiedad(Opcion)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>7.1 - Cucharas (material y estado)</td>
+                    <td><input type="text" id="cantidad_7_1" name="cantidad_7_1" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_1" name="estado_7_1">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_1_ieo" name="propiedad_7_1[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_1_operador" name="propiedad_7_1[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.4 - Platos (material y estado)</td>
+                    <td><input type="text" id="cantidad_7_4" name="cantidad_7_4" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_4" name="estado_7_4">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_4_ieo" name="propiedad_7_4[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_4_operador" name="propiedad_7_4[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.6 - Vasos (material y estado)</td>
+                    <td><input type="text" id="cantidad_7_6" name="cantidad_7_6" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_6" name="estado_7_6">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_6_ieo" name="propiedad_7_6[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_6_operador" name="propiedad_7_6[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.7 - Bandejas (material y estado)</td>
+                    <td><input type="text" id="cantidad_7_7" name="cantidad_7_7" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_7" name="estado_7_7">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_7_ieo" name="propiedad_7_7[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_7_operador" name="propiedad_7_7[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.8 - Ollas (capacidad y estado)</td>
+                    <td><input type="text" id="cantidad_7_8" name="cantidad_7_8" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_8" name="estado_7_8">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_8_ieo" name="propiedad_7_8[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_8_operador" name="propiedad_7_8[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.9 - Canecas plásticas (capacidad y estado)</td>
+                    <td><input type="text" id="cantidad_7_9" name="cantidad_7_9" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_9" name="estado_7_9">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_9_ieo" name="propiedad_7_9[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_9_operador" name="propiedad_7_9[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.10 - Jarras plásticas (capacidad y estado)</td>
+                    <td><input type="text" id="cantidad_7_10" name="cantidad_7_10" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_10" name="estado_7_10">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_10_ieo" name="propiedad_7_10[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_10_operador" name="propiedad_7_10[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.11 - Baldes (capacidad y estado)</td>
+                    <td><input type="text" id="cantidad_7_11" name="cantidad_7_11" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_11" name="estado_7_11">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_11_ieo" name="propiedad_7_11[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_11_operador" name="propiedad_7_11[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.12 - Cucharas para servir (material y estado)</td>
+                    <td><input type="text" id="cantidad_7_12" name="cantidad_7_12" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_12" name="estado_7_12">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_12_ieo" name="propiedad_7_12[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_12_operador" name="propiedad_7_12[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.13 - Pailas (capacidad y estado)</td>
+                    <td><input type="text" id="cantidad_7_13" name="cantidad_7_13" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_13" name="estado_7_13">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_13_ieo" name="propiedad_7_13[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_13_operador" name="propiedad_7_13[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.14 - Cuchillos para cocina (material y estado)</td>
+                    <td><input type="text" id="cantidad_7_14" name="cantidad_7_14" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_14" name="estado_7_14">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_14_ieo" name="propiedad_7_14[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_14_operador" name="propiedad_7_14[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.15 - Neveras (capacidad en litros, estado y termómetro)</td>
+                    <td><input type="text" id="cantidad_7_15" name="cantidad_7_15" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_15" name="estado_7_15">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_15_ieo" name="propiedad_7_15[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_15_operador" name="propiedad_7_15[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.16 - N° de refrigeradores y/o congeladores. Especifique capacidad, estado y termómetro en la casilla de observaciones.</td>
+                    <td><input type="text" id="cantidad_7_16" name="cantidad_7_16" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_16" name="estado_7_16">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_16_ieo" name="propiedad_7_16[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_16_operador" name="propiedad_7_16[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.18 - Nº de estufas lineales, características y estado.</td>
+                    <td><input type="text" id="cantidad_7_18" name="cantidad_7_18" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_18" name="estado_7_18">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_18_ieo" name="propiedad_7_18[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_18_operador" name="propiedad_7_18[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.19 - Gramera.</td>
+                    <td><input type="text" id="cantidad_7_19" name="cantidad_7_19" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_19" name="estado_7_19">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_19_ieo" name="propiedad_7_19[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_19_operador" name="propiedad_7_19[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.20 - Nº de licuadoras, capacidad en litros.</td>
+                    <td><input type="text" id="cantidad_7_20" name="cantidad_7_20" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_20" name="estado_7_20">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_20_ieo" name="propiedad_7_20[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_20_operador" name="propiedad_7_20[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.21 - Termómetro.</td>
+                    <td><input type="text" id="cantidad_7_21" name="cantidad_7_21" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_21" name="estado_7_21">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_21_ieo" name="propiedad_7_21[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_21_operador" name="propiedad_7_21[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>7.22 - N° de balanzas 25 lbs. Capacidad y estado.</td>
+                    <td><input type="text" id="cantidad_7_22" name="cantidad_7_22" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_7_22" name="estado_7_22">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_7_22_ieo" name="propiedad_7_22[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_7_22_operador" name="propiedad_7_22[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>8.2 - Cernidores</td>
+                    <td><input type="text" id="cantidad_8_2" name="cantidad_8_2" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_8_2" name="estado_8_2">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_8_2_ieo" name="propiedad_8_2[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_8_2_operador" name="propiedad_8_2[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>8.3 - Que tipo de material se utiliza para la limpieza y secado de utensilios de cocina</td>
+                    <td><input type="text" id="cantidad_8_3" name="cantidad_8_3" placeholder="Número"></td>
+                    <td>
+                        <select id="estado_8_3" name="estado_8_3">
+                            <option value="Bueno">Bueno</option>
+                            <option value="Regular">Regular</option>
+                            <option value="Malo">Malo</option>
+                        </select>
+                    </td>
+                    <td>
+                        <label><input type="checkbox" id="propiedad_8_3_ieo" name="propiedad_8_3[]" value="IEO"> IEO</label>
+                        <label><input type="checkbox" id="propiedad_8_3_operador" name="propiedad_8_3[]" value="Operador"> Operador</label>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    
+        <button type="submit">Guardar</button>  
+    </form>
+</body>
+</html>

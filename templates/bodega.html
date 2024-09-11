@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Inspección de Bodega</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/bodega.css') }}">
+    <script>
+        function updateForm() {
+            var tipoVisita = document.getElementById("tipo_visita").value;
+            var numeroVisitaField = document.getElementById("numero_visita_field");
+            var requisitosFields = document.getElementById("requisitos_fields");
+
+            if (tipoVisita === "Visita Seguimiento") {
+                numeroVisitaField.style.display = "block";
+                requisitosFields.style.display = "block"; 
+            } else {
+                numeroVisitaField.style.display = "none";
+                requisitosFields.style.display = "block";
+            }
+        }
+    </script>
+</head>
+<body>
+    <main>
+        <h1>FORMULARIO DE BODEGA</h1>
+        <form action="/submit" method="post" class="form-container">
+            <fieldset>
+                <legend>Información General</legend>
+                <label for="operador">Operador:</label>
+                <select id="operador" name="operador" required>
+                    <option value="">Seleccione un Operador</option>
+                    {% for operador in operators %}
+                        <option value="{{ operador }}">{{ operador }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="tipo_visita">Tipo de Visita:</label>
+                <select id="tipo_visita" name="tipo_visita" required onchange="updateForm()">
+                    <option value="Visita Inicio">Visita de Inicio</option>
+                    <option value="Visita Seguimiento">Visita de Seguimiento</option>
+                    <option value="Visita Cierre">Visita de Cierre</option>
+                </select>
+
+                <div id="numero_visita_field" style="display:none;">
+                    <label for="numero_visita">Número de Visita:</label>
+                    <input type="number" id="numero_visita" name="numero_visita">
+                </div>
+
+                <label for="fecha_visita">Fecha de Visita:</label>
+                <input type="date" id="fecha_visita" name="fecha_visita" required>
+            </fieldset>
+
+            <fieldset id="requisitos_fields">
+                <legend>REQUISITOS</legend>
+                <h2>CAPÍTULO I - Artículo 6</h2>
+                <h3>1. Edificaciones e Instalaciones</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_1">1.1 - La unidad de servicio se encuentra aislada de focos de insalubridad, en un lugar fuera de riesgos de inundación u otra situación atribuible al medio ambiente</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_1" name="verificacion_1">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_1" name="observacion_1" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_2">1.2 - El funcionamiento de la planta no pone en riesgo la salud de la comunidad</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_2" name="verificacion_2">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_2" name="observacion_2" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_3">1.3 - Los accesos y alrededores están limpios y libres de acumulación de basuras</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_3" name="verificacion_3">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_3" name="observacion_3" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_4">1.3a - Sus accesos y alrededores tienen superficies pavimentadas o recubiertas por superficies que faciliten el mantenimiento sanitario</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_4" name="verificacion_4">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_4" name="observacion_4" placeholder="Observaciones">
+                    </div>
+                </div> 
+                
+                <h3>2. Diseño y Construcción</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_5">2.1 - La edificación está diseñada y construida de manera que proteja los ambientes de producción e impida la entrada de polvo, lluvia, suciedades y otros componentes, así como el ingreso y refugio de plagas y animales domésticos</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_5" name="verificacion_5">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_5" name="observacion_5" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_6">2.2 - La edificación posee una adecuada separación física y funcional de áreas de operación</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_6" name="verificacion_6">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_6" name="observacion_6" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_7">2.3 - Los ambientes de la edificación tienen el ambiente adecuado para la instalación, operación y mantenimiento de equipos</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_7" name="verificacion_7">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_7" name="observacion_7" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_8">2.3a - La edificación y sus diversos locales tienen el tamaño adecuado para la circulación del personal y traslado de la materia prima</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_8" name="verificacion_8">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_8" name="observacion_8" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_9">2.4 - La edificación y sus instalaciones están construidas para facilitar las operaciones de limpieza, desinfección y desinfestación</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_9" name="verificacion_9">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_9" name="observacion_9" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_10">2.5 - El tamaño del almacén o depósito es proporcional a los volúmenes de insumos y productos terminados manejados por el establecimiento, disponiendo además de espacios libres para la circulación del personal, el traslado de materiales o productos, y para realizar la limpieza y el mantenimiento de las áreas respectivas</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_10" name="verificacion_10">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_10" name="observacion_10" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_11">2.6 - Sus áreas deberán estar separadas de cualquier tipo de vivienda y no podrán ser utilizadas como dormitorio</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_11" name="verificacion_11">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_11" name="observacion_11" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_12">2.7 - No se permite la presencia de animales en los establecimientos objeto del presente decreto</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_12" name="verificacion_12">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_12" name="observacion_12" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>3. Abastecimiento de Agua</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_13">3.1/3.2/3.3/3.4/3.5 - El agua es potable y cumple normas vigentes establecidas. Se dispone de agua potable a la temperatura y presión requeridas para efectuar una limpieza y desinfección efectiva</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_13" name="verificacion_13">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_13" name="observacion_13" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <h3>4. Disposicion de residuos liquidos</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_14">4.1 - Dispone de sistemas sanitarios adecuados para la recolección, tratamiento y disposición de aguas residuales</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_14" name="verificacion_14">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_14" name="observacion_14" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_15">4.2 - El manejo de los residuos líquidos dentro del establecimiento se realiza de manera que impide la contaminación del alimento o de las superficies de potencial contacto con éste</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_15" name="verificacion_15">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_15" name="observacion_15" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>5. Disposicion de residuos solidos</h3>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_16">5.1, 5,2, 5.3, 5.4, 5.5 - El establecimiento debe estar dotado de un sistema de recolección y almacenamiento de residuos sólidos que impida el acceso y proliferación de insectos, roedores y otras plagas, y que cumpla con las normas sanitarias vigentes</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_5_1" name="verificacion_5_1">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_5_1" name="observacion_5_1" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>6. Instalaciones Sanitarias</h3>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_6_1">6.1 - Posee instalaciones sanitarias suficientes como servicios sanitarios para facilitar la higiene del personal (en buen estado) y se proveen de los recursos requeridos para la higiene tales como papel higiénico, dispensador de jabón, implementos desechables o equipos automáticos para el secado de manos y papeleras con bolsa de color determinado.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_6_1" name="verificacion_6_1">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_6_1" name="observacion_6_1" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_6_2">6.2 - Posee instalaciones sanitarias suficientes como servicios sanitarios para facilitar la higiene del personal (en buen estado) y se proveen de los recursos requeridos para la higiene tales como papel higiénico, dispensador de jabón, implementos desechables o equipos automáticos para el secado de manos y papeleras con bolsa de color determinado.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_6_2" name="verificacion_6_2">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_6_2" name="observacion_6_2" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_6_3">6.3 - Se encuentran instalados lavamanos en las áreas de elaboración o próximos a éstas para la higiene del personal que participa en la manipulación de alimentos para facilitar la supervisión de estas prácticas.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_6_3" name="verificacion_6_3">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_6_3" name="observacion_6_3" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_6_4">6.4 - En las proximidades de los lavamanos se colocan avisos o advertencias al personal sobre la necesidad de lavarse las manos luego de usar los servicios sanitarios, después de cualquier cambio de actividad y antes de iniciar labores de producción.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_6_4" name="verificacion_6_4">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_6_4" name="observacion_6_4" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_6_5">6.5 - Cuando lo requieran, deben disponerse en las áreas de elaboración de instalaciones adecuadas para la limpieza y desinfección de los equipos y utensilios de trabajo.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_6_5" name="verificacion_6_5">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_6_5" name="observacion_6_5" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <h3>CONDICIONES EPECIFICAS DE LAS AREAS DE ELABORACIÓN</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_21">ARTICULO 7  /11.1-1.4/2,2.1,2.2 - 1. Pisos y Paredes: Sin grietas, rugosidades, asperezas o falta de continuidad que facilite la acumulación de suciedad y/o afecte su limpieza, las uniones entre paredes, entre estas y con el piso son redondeadas. Las superficies son de color claro, impermeables, lavables y no absorbentes, esto es, que no permita el paso de ningún tipo de líquido y de fácil eliminación de residuos. Los pisos cuentan con la pendiente necesaria para efectos de drenaje. Drenajes: Cuenta con las tuberías y drenajes, debidamente protegidos por rejillas para la conducción y recolección de aguas residuales; en caso de que se cuente con drenajes al interior de cavas o cuartos fríos, estos deben contar con mecanismo de sellado, que puedan ser removidos para facilitar las labores de limpieza y desinfección.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_21" name="verificacion_21">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_21" name="observacion_21" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_22">Techos: Sin cortes ni grietas que acumulen polvo o suciedad y favorezcan el crecimiento de hongos que puedan caer sobre los alimentos o las superficies de trabajo, o que favorezcan el ingreso de plagas al establecimiento. En caso de contar con falsos techos, estos deben ser construidos en material impermeable, resistente, liso, con acceso a la cámara superior para labores de limpieza, desinfección y desinsectación. Ventilación: Ventanas y aberturas sin deterioro tales como grietas que produzcan acumulación de suciedad. Aquellas que lo requieran deberán contar con una malla que evite el ingreso de plagas y que sea de fácil limpieza. El flujo de aire debe ser unidireccional (de una zona limpia a una sucia). Esta debe ser capaz de prevenir la condensación del vapor, acúmulo de polvo y facilitar la remoción del calor. Las estructuras elevadas como sistemas de extracción y/o extractores de aire, deben encontrarse en buen estado de mantenimiento que evite la caída de materias extrañas, además de ser de fácil limpieza y eliminación de la condensación que produzca goteo sobre los alimentos. Puertas: Ser resistentes, de superficie lisa y no absorbente, su diseño debe impedir el ingreso de plagas al establecimiento. Iluminación: La iluminación puede ser natural o artificial, las lámparas deben encontrarse en buen estado de mantenimiento, ser de fácil limpieza y estar protegidas para evitar la caída de partículas extrañas sobre las superficies que entran en contacto con el alimento, sobre el alimento y sobre los manipuladores.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_22" name="verificacion_22">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_22" name="observacion_22" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>CAPITULO II EQUIPOS Y UTENSILIOS</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_23">ARTICULO 8/1. Los equipos y utensilios empleados en el manejo de los alimentos son de materiales resistentes al uso y a la corrosión y son de fácil limpieza y desinfección.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_23" name="verificacion_23">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_23" name="observacion_23" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_24">7. Las superficies de contacto con el alimento no están recubiertas con pinturas u otro tipo de material desprendible.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_24" name="verificacion_24">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_24" name="observacion_24" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_25">9. La superficie exterior de equipos está diseñada y construida para facilitar limpieza y desinfección.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_25" name="verificacion_25">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_25" name="observacion_25" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_26">10. Las mesas y mesones empleados en el manejo de alimentos tienen superficies lisas, con bordes sin aristas y están construidos con materiales resistentes, impermeables y lavables.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_26" name="verificacion_26">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_26" name="observacion_26" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_27">11. Los contenedores y recipientes usados para el almacenamiento de materiales no comestibles y desechos son a prueba de fugas, debidamente identificados, en material impermeable, de fácil limpieza y con tapa hermética. Los mismos no son utilizados para contener productos comestibles.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_27" name="verificacion_27">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_27" name="observacion_27" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_28">ARTICULO 10/2. La distancia entre equipos y paredes perimetrales, columnas u otros, permite funcionar adecuadamente y facilita el acceso para limpieza, inspección y mantenimiento.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_28" name="verificacion_28">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_28" name="observacion_28" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <h3>CAPITULO III  MANIPULADOR DE ALIMENTOS</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_29">ARTICULO 12. El personal manipulador de alimentos tiene reconocimiento médico antes de desempeñar esta función (incluye el conductor del vehículo y ayudante). Efectúan un reconocimiento médico cada vez que se considere necesario por razones clínicas y epidemiológicas.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_29" name="verificacion_29">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_29" name="observacion_29" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_30">Parrafo 1. La dirección de la bodega toma las medidas correspondientes para que al personal manipulador de alimentos se le practique un reconocimiento médico, por lo menos una vez al año.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_30" name="verificacion_30">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_30" name="observacion_30" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_31">Parrafo 2. La dirección de la bodega toma las medidas necesarias para que no se permita contaminar los alimentos directa o indirectamente a ninguna persona que se sepa o sospeche que padezca de una enfermedad susceptible de transmitirse por los alimentos. Todo manipulador de alimentos que represente un riesgo de este tipo lo comunica a la dirección de la bodega.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_31" name="verificacion_31">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_31" name="observacion_31" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <h3>ARTICULO 14. PRACTICAS HIGIENICAS Y MEDIDAS DE PROTECCION</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_35">1. Mantiene una estricta limpieza e higiene personal y aplica buenas prácticas higiénicas en sus labores.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_35" name="verificacion_35">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_35" name="observacion_35" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_36">2. Usan vestimenta de trabajo que cumpla los requisitos establecidos. El operador dota de vestimenta de trabajo en número suficiente para el personal manipulador.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_36" name="verificacion_36">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_36" name="observacion_36" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_37">4. Se lavan y desinfectan las manos cada vez que sea necesario.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_37" name="verificacion_37">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_37" name="observacion_37" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_38">5. Mantienen el cabello recogido y cubierto totalmente.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_38" name="verificacion_38">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_38" name="observacion_38" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_39">6. Dependiendo del riesgo de manipulación asociado con el proceso es obligatorio el uso de tapabocas mientras se manipula el alimento.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_39" name="verificacion_39">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_39" name="observacion_39" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_40">7. Mantienen las uñas cortas, limpias y sin esmalte.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_40" name="verificacion_40">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_40" name="observacion_40" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_41">8. No se permiten anillos, aretes, joyas u otros accesorios mientras el personal realice sus labores.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_41" name="verificacion_41">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_41" name="observacion_41" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_42">9. Usan calzado cerrado, de material resistente e impermeable, de tacón bajo y suela antideslizante.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_42" name="verificacion_42">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_42" name="observacion_42" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_43">10. Cuando se usan guantes, se mantienen limpios, sin roturas o desperfectos y son tratados con el mismo cuidado higiénico de las manos sin protección.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_43" name="verificacion_43">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_43" name="observacion_43" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_44">11. No es permitido comer, beber o masticar cualquier objeto o producto, como tampoco fumar o escupir en las áreas de producción o en cualquier otra zona donde exista riesgo de contaminación del alimento.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_44" name="verificacion_44">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_44" name="observacion_44" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_45">12. El personal que presente afecciones de la piel o enfermedad infectocontagiosa es excluido de toda actividad directa de manipulación de alimentos.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_45" name="verificacion_45">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_45" name="observacion_45" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_46">13/14. Las personas que actúen en calidad de visitantes a las áreas de fabricación cumplen con las medidas de protección y sanitarias estipuladas en el presente capítulo.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_46" name="verificacion_46">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_46" name="observacion_46" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>CAPITULO V ASEGURAMIENTO Y CONTROL DE LA CALIDAD E INOCUIDAD</h3>
+
+                <div class="verificacion-group">
+                    <label for="verificacion_47">Articulo 21. Todas las operaciones de fabricación, procesamiento, envase, almacenamiento y distribución de los alimentos están sujetas a controles de calidad. Estos procedimientos y controles previenen los defectos evitables y reducen los defectos naturales o inevitables a niveles tales que no representen riesgo a la salud.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_47" name="verificacion_47">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_47" name="observacion_47" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_48">Articulo 22. El sistema de control y aseguramiento de la calidad tiene como mínimo: Especificaciones y criterios de aceptación, liberación y/o rechazo sobre las materias primas y productos terminados. Llevan formato de control de calidad de productos en bodega, donde se encuentre como mínimo fecha de vencimiento, lote, características organolépticas, temperatura, peso, fecha de salida de bodega, marca y nombre del producto. Cuentan con Manuales, guías, procesos que describan los detalles esenciales del sistema de control de los alimentos. Cuentan con el plan de muestreo que garantice resultados confiables y representativos del lote analizado.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_48" name="verificacion_48">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_48" name="observacion_48" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_49">Articulo 22, 1-4. El operador cuenta con protocolos para almacenar, señalizar y disponer los productos no conformes y están documentados.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_49" name="verificacion_49">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_49" name="observacion_49" placeholder="Observaciones">
+                    </div>
+                </div>
+                
+                <div class="verificacion-group">
+                    <label for="verificacion_50">Parrafo 1/2. El responsable del establecimiento podrá aplicar el sistema de aseguramiento de la inocuidad mediante análisis de peligros y puntos críticos de control (AAPPCC), el cual deberá aplicarlo de acuerdo a los principios generales.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_50" name="verificacion_50">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_50" name="observacion_50" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>CAPITULO VI SANEAMIENTO</h3>
+
+                <!-- Verificación 51 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_51">Artículo 26 - Se cuenta con un plan de saneamiento con objetivos claramente definidos y con los procedimientos requeridos para disminuir los riesgos de contaminación de los alimentos. El plan de Saneamiento debe estar escrito y a disposición de la autoridad sanitaria competente.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_51" name="verificacion_51">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_51" name="observacion_51" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 52 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_52">1. Programa de Limpieza y Desinfección - Los procedimientos de limpieza y desinfección satisfacen las necesidades particulares del proceso y del producto de que se trate. Cada establecimiento debe tener por escrito todos los procedimientos, incluyendo los agentes y sustancias utilizadas, así como las concentraciones o formas de uso y los equipos e implementos requeridos para efectuar las operaciones y periodicidad de limpieza y desinfección. Verificar Registros, las instalaciones, equipos y utensilios se encuentran limpios y han sido desinfectados, lo establecido en el programa es ejecutado correctamente en el comedor escolar y bodega.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_52" name="verificacion_52">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_52" name="observacion_52" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 53 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_53">2. Programa de desechos sólidos (basuras) - Cuenta con las instalaciones, elementos, áreas, recursos y procedimientos que garanticen una eficiente labor de recolección, conducción, manejo, almacenamiento interno, clasificación, transporte y disposición, lo cual tendrá que hacerse observando las normas de higiene y salud ocupacional establecidas con el propósito de evitar la contaminación de los alimentos, áreas, dependencias y equipos o el deterioro del medio ambiente. Define el uso de colores de bolsas y está correctamente relacionado según su tipo, registros de evacuación de desechos incluido residuos de aceite. Verificar registros, lo establecido en el programa es ejecutado correctamente.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_53" name="verificacion_53">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_53" name="observacion_53" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 54 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_54">3. Programa de control de plagas - Las plagas entendidas como artrópodos y roedores son objeto de un programa de control específico. Verificar registros, empresa externa, cronograma para el control de plagas, tener en cuenta Decreto 1843 de 1991. Verificar si lo establecido en el programa es ejecutado correctamente.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_54" name="verificacion_54">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_54" name="observacion_54" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 55 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_55">4. Establece protocolo de aseguramiento de la calidad del agua, presentando procedimiento del lavado de tanques y certificado de lavado y desinfección de tanques. Se realiza muestreo físico-químico y/o microbiológico de calidad de agua.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_55" name="verificacion_55">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_55" name="observacion_55" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>CAPITULO VII ALMACENAMIENTO - DISTRIBUCIÓN Y TRANSPORTE DE ALIMENTOS Y MATERIAS PRIMAS</h3>
+
+                <!-- Verificación 56 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_56">Artículo 27 - Las operaciones y condiciones de almacenamiento, distribución, transporte y comercialización de alimentos deben evitar: A. La contaminación y alteración del alimento B. La proliferación de microorganismos indeseables en los alimentos C. El deterioro o daño del envase o embalaje.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_56" name="verificacion_56">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_56" name="observacion_56" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 57 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_57">Artículo 28-1 - Se lleva un control de primeras entradas y primeras salidas con el fin de garantizar la rotación de los productos.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_57" name="verificacion_57">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_57" name="observacion_57" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 58 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_58">2. El almacenamiento de productos que requieren refrigeración o congelación se realiza teniendo en cuenta las condiciones de temperatura, humedad y circulación del aire que requiera cada alimento. Se lleva a cabo un control de temperatura y humedad que asegure la conservación del producto. Temperatura de refrigeración 4°C +/-2°C, la temperatura de congelación debe ser de -18°C.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_58" name="verificacion_58">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_58" name="observacion_58" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 59 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_59">3. El almacenamiento de los insumos y productos terminados se realiza de manera que se minimice su deterioro y se eviten aquellas condiciones que puedan afectar la higiene, funcionalidad e integridad de los mismos. Además se identifican claramente para conocer su procedencia, calidad y tiempo de vida.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_59" name="verificacion_59">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_59" name="observacion_59" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 60 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_60">4. El almacenamiento de los insumos o productos terminados se realiza ordenadamente en pilas o estibas con separación mínima de 60 centímetros con respecto a las paredes perimetrales, y se disponen sobre paletas o tarimas elevadas del piso por lo menos 15 centímetros de manera que se permita la inspección, limpieza y fumigación, si es el caso. No se deben utilizar estibas sucias o deterioradas.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_60" name="verificacion_60">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_60" name="observacion_60" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 61 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_61">5. En los sitios o lugares destinados al almacenamiento de materias primas, envases y productos terminados no se realizan actividades diferentes a éstas.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_61" name="verificacion_61">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_61" name="observacion_61" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 62 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_62">6. El almacenamiento de los alimentos devueltos a la bodega por fecha de vencimiento caducada o producto retenido o cambios, se realiza en un área o depósito exclusivo para tal fin; este depósito está identificado claramente y cuenta con un libro de registro o formato en el cual se consigna fecha, cantidad de producto devuelto, salidas parciales y destino final.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_62" name="verificacion_62">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_62" name="observacion_62" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 63 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_63">7. Los plaguicidas, detergentes, desinfectantes y otras sustancias peligrosas que por necesidades de uso se encuentren dentro de la fábrica, están etiquetadas adecuadamente con un rótulo en que se informe sobre su toxicidad y empleo. Estos productos se almacenan en áreas o estantes especialmente destinados para este fin y su manipulación sólo podrá hacerla el personal idóneo, evitando la contaminación de otros productos. Se encuentran en un área específica los productos de L&D empleados en las IEO y estos son los productos aprobados?</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_63" name="verificacion_63">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_63" name="observacion_63" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 64 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_64">Artículo 29 - El transporte se realiza en condiciones tales que excluye la contaminación y/o la proliferación de microorganismos y protege contra la alteración del alimento o los daños del envase. Lleva un sistema de verificación y registro de control de la temperatura de Thermo King.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_64" name="verificacion_64">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_64" name="observacion_64" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 65 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_65">2. Los alimentos y materias primas que por su naturaleza requieran mantenerse refrigerados o congelados son transportados y distribuidos bajo condiciones que aseguren y garanticen el mantenimiento de las condiciones de refrigeración o congelación hasta su destino final. Asegura la cadena de frío.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_65" name="verificacion_65">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_65" name="observacion_65" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 66 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_66">3. Los vehículos que posean sistemas de refrigeración o congelación, son sometidos a revisión periódica, con el fin de que su funcionamiento garantice las temperaturas requeridas para la buena conservación de los alimentos y contarán con indicadores y sistemas de registro de estas temperaturas.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_66" name="verificacion_66">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_66" name="observacion_66" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 67 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_67">4. Se revisa los vehículos antes de cargar los alimentos, con el fin de asegurar que se encuentren en buenas condiciones sanitarias. Se llevan registros y estos están consolidados.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_67" name="verificacion_67">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_67" name="observacion_67" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 68 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_68">5. Los vehículos son adecuados para el fin perseguido y fabricados con materiales tales que permitan una limpieza fácil y completa. Igualmente se mantienen limpios y, en caso necesario, se someterán a procesos de mantenimiento.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_68" name="verificacion_68">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_68" name="observacion_68" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 69 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_69">6. Evitar transportar alimentos con diferente riesgo en salud pública; evitar una contaminación cruzada.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_69" name="verificacion_69">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_69" name="observacion_69" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 70 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_70">7. Se prohíbe disponer de alimentos directamente sobre el suelo de los medios de transporte; para este fin se utilizarán los recipientes, canastillas o implementos de material adecuado de manera que aisle el producto de toda posibilidad de contaminación.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_70" name="verificacion_70">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_70" name="observacion_70" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 71 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_71">8. Se prohíbe transportar conjuntamente en un mismo vehículo alimentos con sustancias peligrosas y otras que por su naturaleza representen riesgo de contaminación del alimento o la materia prima.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_71" name="verificacion_71">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_71" name="observacion_71" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 72 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_72">9. Los vehículos transportadores de alimentos llevan en su exterior en forma claramente visible la leyenda: Transporte de Alimentos y el logo del PAE.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_72" name="verificacion_72">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_72" name="observacion_72" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 73 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_73">10. Durante las actividades de distribución de alimentos y materias primas, toda persona natural o jurídica garantiza el mantenimiento de las condiciones sanitarias y de temperatura de estos.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_73" name="verificacion_73">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_73" name="observacion_73" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 74 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_74">10.1 No existe comunicación entre la unidad de carga y la cabina del conductor.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_74" name="verificacion_74">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_74" name="observacion_74" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 75 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_75">10.2 El diseño de la unidad de transporte permite la evacuación de las aguas de lavado en caso de que la unidad de transporte tenga orificios para drenaje; estos cuentan con un sistema de cerrado que lo aisle del exterior.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_75" name="verificacion_75">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_75" name="observacion_75" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 76 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_76">10.3 La unidad transportadora cuenta con recipientes, canastillas y/o implementos de acuerdo a la normatividad sanitaria vigente para el tipo de producto transportado y son de material higiénico sanitario, protegiendo el producto de la contaminación y del contacto directo con el piso y otras superficies del vehículo.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_76" name="verificacion_76">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_76" name="observacion_76" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 77 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_77">10.4 Los recipientes, canastillas y/o implementos que entran en contacto con el producto son mantenidos de forma que se evita la contaminación con el alimento, son de fácil limpieza y desinfección, y se lleva registros de lavado de canastillas en bodega.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_77" name="verificacion_77">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_77" name="observacion_77" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 78 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_78">10.5 Se cuenta con valoración del médico ocupacional al personal manipulador.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_78" name="verificacion_78">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_78" name="observacion_78" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 79 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_79">10.6 Los manipuladores de alimentos cumplen con las prácticas necesarias durante el transporte y la manipulación.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_79" name="verificacion_79">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_79" name="observacion_79" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 80 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_80">10.7 El personal manipulador de alimentos cuenta con la dotación y vestimenta de trabajo acorde con la actividad.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_80" name="verificacion_80">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_80" name="observacion_80" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 81 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_81">10.8 En caso de observarse descargue de productos, los manipuladores de alimentos se lavan con agua y jabón desinfectante las manos.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_81" name="verificacion_81">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_81" name="observacion_81" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 82 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_82">10.9 El manipulador recibe capacitación continua y permanente acorde a la actividad que realice: manipulación de alimentos (BPM, higiene, limpieza locativa, almacenamiento, calidad, higiene personal, higiene vehículo, prevención de contaminación cruzada, control de temperatura).</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_82" name="verificacion_82">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_82" name="observacion_82" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>PROGRAMA DE MUESTREO FISICOQUIMICO Y MICROBIOLOGICO</h3>
+
+                <!-- Verificación 83 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_83">Anexo Tecnico. El operador establece un área para muestras y contramuestras de productos industrializados. Estos están correctamente rotulados (con fecha de toma y de eliminación, hora de toma, lote, número de menú, modalidad, temperatura de toma, y persona responsable del proceso) y se llevan registros de su recepción y desecho.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_83" name="verificacion_83">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_83" name="observacion_83" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>PROGRAMA DE MANTENIMIENTO PREVENTIVO Y CORRECTIVO E CALIBRACION DE EQUIPOS  E INSTRUMENTOS DE MEDICION</h3>
+
+                <!-- Verificación 84 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_84">Anexo Tecnico: Se presenta el programa de mantenimiento preventivo, correctivo y de calibración con protocolos, procedimientos y cronogramas consolidando e inventariando junto a las hojas de vida, los equipos e instrumentos de medición.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_84" name="verificacion_84">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_84" name="observacion_84" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 85 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_85">Anexo Tecnico: El operador acredita laboratorio externo o empresa certificada con certificados de calibración de los equipos e instrumentos de medición.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_85" name="verificacion_85">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_85" name="observacion_85" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>PROGRAMA DE CAPACITACION CONTINUA PARA OPERARIOS Y MANIPULADORAS</h3>
+
+                <!-- Verificación 86 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_86">Anexo Tecnico: El operador presenta plan de capacitación a manipuladores y operarios desde su vinculación y son sometidos a capacitación, actualización continua y permanente.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_86" name="verificacion_86">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_86" name="observacion_86" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 87 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_87">Anexo Tecnico: Presenta cronograma de capacitación, define temas mínimos y se llevan registros.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_87" name="verificacion_87">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_87" name="observacion_87" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h3>PROVEEDORES, MATERIAS PRIMAS E INSUMOS</h3>
+
+                <!-- Verificación 88 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_88">Anexo Tecnico: El operador presenta programa de proveedores, estableciendo aspectos y criterios de evaluación, aceptación y seguimiento a proveedores, incluyendo especificaciones de calidad, criterios de aceptación y rechazo de materias primas e insumos, condiciones de recibo, almacenamiento, uso y controles de calidad, así como la caracterización de materias primas e insumos y su rotación, aplicación del sistema PEPS (Primero en Entrar, Primero en Salir), requisitos de rotulado según reglamentación sanitaria vigente (Resoluciones 5109 de 2005, 333 de 2011 y 810 de 2021) y el oportuno seguimiento de los mismos a partir de los registros de control.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_88" name="verificacion_88">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_88" name="observacion_88" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <!-- Verificación 89 -->
+                <div class="verificacion-group">
+                    <label for="verificacion_89">Anexo Tecnico: El operador acredita como mínimo 1 visita a proveedores. Incluye formato de visita técnica a la planta o bodega del proveedor, controles, criterios técnicos y cronogramas.</label>
+                    <div class="verificacion-controls">
+                        <select id="verificacion_89" name="verificacion_89">
+                            <option value="1">Cumple</option>
+                            <option value="0">No Cumple</option>
+                            <option value="null">No Aplica</option>
+                        </select>
+                        <input type="text" id="observacion_89" name="observacion_89" placeholder="Observaciones">
+                    </div>
+                </div>
+
+                <h4>NOTA: ACLARATORIA: DOCUMENTO UTILIZADO COMO SOPORTE DE VERIFICACION DEL PLAN DE ALISTAMIENTO ANTES, DURANTE Y AL CIERRE DE LA VIGENCIA DEL CONTRATO, A LAS BODEGAS DE LOS OPERADORES PARA GARANTIZAR LA EJECUCION DEL PROGRAMA.</h4>
+
+            </fieldset>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+</body>
+</html>

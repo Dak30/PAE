@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tecnica - PAE</title>
+    <link rel="stylesheet" href="/static/styles/tecnica.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Establecer la fecha actual
+            var today = new Date().toISOString().split('T')[0];
+            $('#fecha_visita').val(today);
+
+            // Actualizar el código de sede, dirección y zona basado en la sede seleccionada
+            $('#sede').change(function() {
+                var sedeId = $(this).val();
+                $.ajax({
+                    url: '/get_sede_info/' + sedeId,
+                    method: 'GET',
+                    success: function(data) {
+                        $('#codigo_sede').val(data.codigo_sede);
+                        $('#direccion').val(data.direccion);
+                        $('#zona').val(data.zona);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>FORMULARIO DE TECNICA</h1>
+    <a href="{{ url_for('index') }}" class="btn-back">Volver al Principal</a>
+    <form method="POST" action="/guardar_tecnica">
+        <!-- Campos del formulario -->
+        <label for="fecha_visita">Fecha de Visita:</label>
+        <input type="date" id="fecha_visita" name="fecha_visita" required><br>
+
+        <label for="hora_visita">Hora:</label>
+        <input type="time" id="hora_visita" name="hora_visita" required><br>
+
+        <label for="operador">Operador:</label>
+        <select id="operador" name="operador" required>
+            <option value="">Seleccione una opción</option>
+            {% for operador in operadores %}
+                <option value="{{ operador }}">{{ operador }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="institucion">Institución Educativa:</label>
+        <div class="select-wrapper">
+            <select id="institucion" name="institucion" required>
+                <option value="">Seleccione una opción</option>
+                {% for institucion in instituciones %}
+                    <option value="{{ institucion.id }}">{{ institucion.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <br>
+
+        <label>Sedes:</label>
+        <select id="sede" name="sede" required>
+            <option value="">Seleccione una opción</option>
+            {% for sede in sedes %}
+                <option value="{{ sede.id }}">{{ sede.nombre }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="codigo_sede">Código de Sede:</label>
+        <input type="text" id="codigo_sede" name="codigo_sede" readonly><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" readonly><br>
+
+        <label for="zona">Zona:</label>
+        <input type="text" id="zona" name="zona" readonly><br>
+
+        <label for="tipo_racion">Tipo de Ración:</label>
+        <select id="tipo_racion" name="tipo_racion" required>
+            <option value="">Seleccione una opción</option>
+            {% for tipo in tipo_racion %}
+                <option value="{{ tipo }}">{{ tipo }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="focalizacion">Cupos Focalización:</label>
+        <input type="number" id="focalizacion" name="focalizacion" required><br>
+
+        <h2>COMPONENTE: EDIFICACION E INSTALACIONES</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_1">1. La unidad de servicio está ubicada en un lugar alejado de focos de insalubridad, maleza y aguas estancadas. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_1" name="verificacion_1" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_1" name="observacion_1" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_2">2. Los techos, paredes y pisos se encuentran en buen estado. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_2" name="verificacion_2" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_2" name="observacion_2" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_3">3. Las puertas se encuentran protegidas para evitar el ingreso y refugio de plagas, las aberturas entre las puertas exteriores y los pisos no deben ser mayores a 1 cm. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_3" name="verificacion_3" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_3" name="observacion_3" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <div class="verificacion-group">
+            <label for="verificacion_4">4. Los mesones empleados en el manejo y preparación de alimentos se encuentran en buen estado. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_4" name="verificacion_4" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_4" name="observacion_4" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_5">5. Las lámparas o bombillos se encuentran protegidas y funcionando. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_5" name="verificacion_5" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_5" name="observacion_5" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_6">6. No se evidencian instalaciones eléctricas expuestas en la zona de preparación. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_6" name="verificacion_6" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_6" name="observacion_6" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_7">7. Los sifones y drenajes se encuentran en buen estado, protegidos (rejilla anticucarachas), funcionando y limpios. (LEVE Y MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_7" name="verificacion_7" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_7" name="observacion_7" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_8">8. Las ventanas y aberturas que se comuniquen con el ambiente exterior están provistas con malla anti-insecto resistentes, de fácil limpieza y bien conservadas. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_8" name="verificacion_8" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_8" name="observacion_8" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_9">9. La institución educativa cuenta con comedor para el consumo de los alimentos. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_9" name="verificacion_9" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_9" name="observacion_9" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_10">10. El comedor escolar o espacio destinado cuenta con las mesas y sillas de acuerdo al turno atendido y se encuentran en buen estado. (GRAVE Y MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_10" name="verificacion_10" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_10" name="observacion_10" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_11">11. Se cuenta con un área de almacenamiento protegida e iluminada, con ventilación natural o artificial. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_11" name="verificacion_11" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_11" name="observacion_11" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_12">12. El área de almacenamiento de las materias primas es acorde a la capacidad de los cupos atendidos. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_12" name="verificacion_12" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_12" name="observacion_12" placeholder="Observaciones">
+            </div>
+        </div>
+        <div class="verificacion-group">
+            <label for="verificacion_13">13. Está constituido en la institución educativa el comité de alimentación escolar (CAE). Cuenta con acta de conformación.</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_13" name="verificacion_13" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_13" name="observacion_13" placeholder="Observaciones">
+                <label for="fecha_13">Fecha:</label>
+                <input type="date" id="fecha_13" name="fecha_13">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_14">14. La institución educativa cuenta con acta de reunión bimensual del comité de alimentación escolar (CAE).</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_14" name="verificacion_14" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_14" name="observacion_14" placeholder="Observaciones">
+                <label for="fecha_14">Fecha:</label>
+                <input type="date" id="fecha_14" name="fecha_14">
+            </div>
+        </div>
+        
+        <h2>COMPONENTE: AREÁ DE ALMACENAMIENTO</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_15">15. La institución educativa cuenta con servicio de gas propano (dos cilindros 1 de 100lb y 1 de 40lb uno en uso y el otro en reserva cargado). (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_15" name="verificacion_15" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_15" name="observacion_15" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_16">16. Los productos o materias primas se encuentran adecuadamente almacenados e identificados y en caso de tener jornada única estén almacenados de acuerdo a la modalidad. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_16" name="verificacion_16" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_16" name="observacion_16" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_17">17. Se evidencian alimentos libres de algún tipo de contaminación. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_17" name="verificacion_17" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_17" name="observacion_17" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_18">18. Se lleva un control de contramuestras de productos de alto riesgo para la salud (solo aplica para los dos sedes educativas designadas por cada operador). (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_18" name="verificacion_18" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_18" name="observacion_18" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_19">19. El área de almacenamiento se mantiene limpia y ordenada. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_19" name="verificacion_19" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_19" name="observacion_19" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_20">20. Se lleva un control de primeras entradas y primeras salidas con el fin de garantizar la rotación de los productos. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_20" name="verificacion_20" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_20" name="observacion_20" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_21">21. Existe recipientes de almacenamiento de agua adecuados y protegidos con tapa, con la capacidad suficiente para atender como mínimo las necesidades correspondientes a un día de preparación, si usan recipientes cuentan con registro de limpieza y desinfección diligenciado. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_21" name="verificacion_21" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_21" name="observacion_21" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_22">22. Se evidencia registro semanal de prueba de calidad del agua, con el kit básico test de PH y cloro residual en las sedes educativas oficiales. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_22" name="verificacion_22" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_22" name="observacion_22" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <h2>COMPONENTE: REQUISITOS HIGIENICOS</h2>
+
+        
+        <div class="verificacion-group">
+            <label for="verificacion_23">23. Se cuenta con recipientes para la disposición de residuos sólidos apropiados con tapa y son removidos con frecuencia. Nota: Según Resolución 2148 de 2019. Bolsa blanca para residuos aprovechables (plástico, cartón vidrio, papel, metales), bolsa verde para residuos orgánicos aprovechables (restos de comida y desechos agrícolas) y bolsa negra para los residuos no aprovechables (servilletas, papeles y cartones contaminados con comida y papeles metalizados). (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_23" name="verificacion_23" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_23" name="observacion_23" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_24">24. La preparación de los alimentos se realiza cumpliendo con lo estipulado en el plan de saneamiento (limpieza y desinfección, manejo de residuos, abastecimiento de agua y manejo integral de plagas). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_24" name="verificacion_24" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_24" name="observacion_24" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_25">25. Los pisos, paredes, techos, mesones de las áreas de preparación, distribución y consumo se encuentran limpios para garantizar condiciones higiénico-sanitarias. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_25" name="verificacion_25" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_25" name="observacion_25" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_26">26. Todo equipo y utensilio que haya entrado en contacto con materias primas o con material contaminado se limpia y desinfecta cuidadosamente antes de ser nuevamente utilizado. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_26" name="verificacion_26" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_26" name="observacion_26" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_27">27. Existen letreros alusivos a la aplicación de BPM, en buen estado y ubicados en las instalaciones del comedor escolar. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_27" name="verificacion_27" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_27" name="observacion_27" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_28">28. Se evidencia en el comedor escolar la implementación de una ruta de evacuación caracterizada a la unidad de servicio de los desechos sólidos y líquidos. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_28" name="verificacion_28" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_28" name="observacion_28" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_29">29. Se dispone de recipiente identificado para la recolección de aceite de cocina usado con área destinada para tal fin y se lleva el formato para su contabilización. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_29" name="verificacion_29" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_29" name="observacion_29" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_30">30. Se evidencian que las diferentes áreas que conforman el comedor escolar están identificadas y señalizadas con avisos elaborados en material lavable, resistente y se encuentran en buen estado. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_30" name="verificacion_30" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_30" name="observacion_30" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_31">31. La Institución Educativa cuenta con concepto higiénico sanitario favorable o favorable con requerimientos o solicitud de visita por parte del operador para realizar visita por Secretaría de Salud. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_31" name="verificacion_31" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_31" name="observacion_31" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <h2>COMPONENTE: CARACTERISTICAS DE CALIDAD DE LOS ALIMENTOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_32">32. Los productos se encuentran con fecha de vencimiento vigente y son aptos para el consumo. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_32" name="verificacion_32" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_32" name="observacion_32" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_33">33. Los productos utilizados en la unidad de servicio para la preparación son avalados por el Eje de Calidad e Inocuidad y Alimentación Saludable. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_33" name="verificacion_33" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_33" name="observacion_33" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_34">34. Se lleva registro de temperatura de los alimentos preparados en sitio: control de temperatura 2 veces durante el tratamiento térmico de la preparación (mínimo 75º C) y al inicio de la distribución a los titulares de derecho (Mínimo 65 ºC). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_34" name="verificacion_34" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_34" name="observacion_34" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_35">35. Se evidencia que el alimento a servir se encuentra a temperatura igual o mayor a 65°C. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_35" name="verificacion_35" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_35" name="observacion_35" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_36">36. Se evidencia formato de remisión de entrega por nivel escolar, con fecha, hora de entrega, debidamente firmado y las cantidades relacionadas en la remisión son acordes a la focalización designada. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_36" name="verificacion_36" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_36" name="observacion_36" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_37">37. Se evidencia entrega de la ración alimentaria designada al personal manipulador de alimentos. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_37" name="verificacion_37" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_37" name="observacion_37" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_38">38. El inventario de los productos o materia prima está acorde a los cupos focalizados y nivel escolar. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_38" name="verificacion_38" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_38" name="observacion_38" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_39">39. Se garantiza cumplimiento al rotulado y etiquetado de todos los alimentos suministrados de manera que en los empaques y envases aparezca la siguiente información: nombre del alimento, ingredientes, información nutricional, contenido neto, peso escurrido, nombre y dirección del fabricante, país de origen, identificación del lote, fecha de vencimiento y/o de duración mínima e instrucciones para conservación, instrucciones de uso, y que las materias primas de calidad cumplan con las especificaciones técnicas descritas en la resolución 00335/21, con registro sanitario INVIMA (Resolución 5109 del 2005, 810 del 2021, 2492 del 2022). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_39" name="verificacion_39" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_39" name="observacion_39" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_40">40. Los productos cumplen con las características organolépticas y físicas requeridas. En caso de suministrarse fruta porcionada, la cual por su composición química presente reacciones de pardeamiento enzimático (banano, manzana, pera), el operador deberá garantizar procedimientos no químicos para evitar esta alteración en sus características organolépticas. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_40" name="verificacion_40" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_40" name="observacion_40" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_41">41. Los alimentos altamente perecederos (proteína, lácteos o alimentos de alto riesgo) se encuentran almacenados y refrigerados a temperatura que garantice su conservación (entre 0 a 4° C) en refrigeración y (temperaturas inferiores a 0°C) en congelación, y se evidencia registro de temperatura mínimo una vez al día. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_41" name="verificacion_41" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_41" name="observacion_41" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_42">42. Se evidencian las guías de preparación en la unidad de servicio y se encuentran ajustadas al ciclo de menú. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_42" name="verificacion_42" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_42" name="observacion_42" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_43">43. Los alimentos son preparados acorde con las guías de preparación estipuladas. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_43" name="verificacion_43" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_43" name="observacion_43" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_44">44. Los cortes de carne empleados para la preparación de los menús son acordes a lo establecido por la SED (Res (caderita, centro de pierna, bola negra) cerdo (brazo y pierna) y pollo (filete de pechuga de pollo sin marinar / pechuga sin piel, sin hueso y sin marinar / pechuga con piel y hueso sin marinar por beneficiario se deberá calcular con base al 65% de parte comestible). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_44" name="verificacion_44" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_44" name="observacion_44" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_45">45. Las reposiciones realizadas al operador por causa de baja calidad, deterioro o daño físico, lotes, fecha de producción y vencimiento, son resueltas de manera inmediata. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_45" name="verificacion_45" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_45" name="observacion_45" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_46">46. Se evidencia formato de reposición o entrega de faltante de acuerdo a formato establecido por la SED. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_46" name="verificacion_46" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_46" name="observacion_46" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_47">47. Se evidencia la reposición o entrega de faltante según sea el caso (reposición o faltante) y el diligenciamiento del formato. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_47" name="verificacion_47" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_47" name="observacion_47" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_48">48. Para las I.E. se evidencia registro de control de temperatura en la recepción de los alimentos altamente perecederos (res, cerdo y pollo). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_48" name="verificacion_48" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_48" name="observacion_48" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_49">49. El operador garantiza la inocuidad de los alimentos, evitando la contaminación cruzada en las diferentes etapas (Almacenamiento, Preparación y distribución). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_49" name="verificacion_49" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_49" name="observacion_49" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <h2>COMPONENTE: PERSONAL MANIPULADOR DE ALIMENTOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_50">50. La unidad de servicio cuenta con la cantidad de manipuladora(e)s necesarios de acuerdo al número de raciones o de acuerdo a lo aprobado por la SED. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_50" name="verificacion_50" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_50" name="observacion_50" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_51">51. La presentación personal de los manipuladores es adecuada (uñas cortas, limpias y sin esmalte, cabello recogido, sin uso de joyas u otros accesorios ni maquillaje). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_51" name="verificacion_51" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_51" name="observacion_51" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_52">52. El personal manipulador cuenta con la documentación requerida: certificados médicos, cronograma de capacitaciones (mínimo 10 horas), copia de la entrega de dotación. Debidamente organizada y archivada en la unidad de servicio. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_52" name="verificacion_52" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_52" name="observacion_52" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_53">53. Se evidencia registro de capacitación en Salud Ocupacional y el personal manipulador de alimentos tiene conocimiento del tema. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_53" name="verificacion_53" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_53" name="observacion_53" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_54">54. Se evidencia registro de capacitación continua en aspectos de BPM (higiene personal y locativa) y el personal manipulador de alimentos posee conocimientos en el tema. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_54" name="verificacion_54" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_54" name="observacion_54" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_55">55. Se evidencia registro de capacitación en preparación de alimentos y el personal manipulador de alimentos demuestra conocimiento del tema. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_55" name="verificacion_55" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_55" name="observacion_55" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_56">56. El personal manipulador cuenta con certificado de capacitación en manipulación de alimentos o plan de capacitación y listado de asistencia. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_56" name="verificacion_56" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_56" name="observacion_56" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_57">57. Se evidencia registro de capacitación en minuta patrón, ciclo de menú y conoce del tema. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_57" name="verificacion_57" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_57" name="observacion_57" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_58">58. Se evidencia registro de capacitación en manejo y diligenciamiento de formatos (plan de saneamiento, entradas y salidas, formato de faltantes, formatos de registro de temperaturas). (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_58" name="verificacion_58" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_58" name="observacion_58" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_59">59. Se evidencia registro de capacitación en estandarización de porciones y servido de alimentos. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_59" name="verificacion_59" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_59" name="observacion_59" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_60">60. Se evidencia registro de capacitación en plan de saneamiento y conoce del tema. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_60" name="verificacion_60" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_60" name="observacion_60" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_61">61. El personal manipulador cuenta con el uniforme completo (pantalón blanco, camisa o bata blancos, zapatos antideslizantes cerrados blancos y delantal plástico) y usan elementos de protección personal (gorro, tapa bocas y guantes en caso de ser necesario). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_61" name="verificacion_61" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_61" name="observacion_61" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_62">62. Se exige al personal externo que visite las áreas de almacenamiento, preparación y/o participe en la distribución de alimentos de los comedores escolares, el uso de la dotación y el cumplimiento de las prácticas de higiene y de manipulación de alimentos establecidas en la normatividad sanitaria vigente. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_62" name="verificacion_62" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_62" name="observacion_62" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <h2>COMPONENTE: CICLO DE MINUTA</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_63">63. Se evidencia que se cumple con la modalidad contratada. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_63" name="verificacion_63" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_63" name="observacion_63" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_64">64. Se evidencia publicado ciclo de menú con dimensiones 64cm x 46cm establecidas por la SED, QR de atención al ciudadano, además se debe evidenciar la publicación del Noti PAE con línea telefónica y correo electrónico de contacto del operador para la atención de las PQRS. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_64" name="verificacion_64" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_64" name="observacion_64" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_65">65. Se da cumplimiento al menú del día. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_65" name="verificacion_65" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_65" name="observacion_65" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_66">66. Se cumple con el peso servido de acuerdo al ciclo de menú por nivel escolar. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_66" name="verificacion_66" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_66" name="observacion_66" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_67">67. Se evidencia la lista de intercambios en el comedor escolar. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_67" name="verificacion_67" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_67" name="observacion_67" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_68">68. Se evidencia la ficha técnica de información del PAE aprobado y publicado en un lugar visible. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_68" name="verificacion_68" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_68" name="observacion_68" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_69">69. Se evidencia el cumplimiento del manual de imagen en la documentación (formatos, avisos, informes, procedimientos e instructivos). (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_69" name="verificacion_69" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_69" name="observacion_69" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <h2>COMPONENTE: HORARIO DEL CONSUMO DE ALIMENTOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_70">70. El horario de consumo de los alimentos se encuentra publicado en un lugar visible del comedor escolar. (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_70" name="verificacion_70" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_70" name="observacion_70" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_71">71. Se evidencia que se cumple con los horarios de consumo de los alimentos (Los cambios de horarios deben ser aprobados previamente por el CAE y debe constar acta firmada). (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_71" name="verificacion_71" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_71" name="observacion_71" placeholder="Observaciones">
+            </div>
+        </div>
+        
+
+        <h2>COMPONENTE: PLAN DE SANEAMIENTO</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_72">72. Se evidencia Plan de Saneamiento en tamaño adecuado de letra, acorde a la Unidad de Servicio, cumpliendo con los programas: limpieza y desinfección, control de plagas, desechos sólidos y abastecimiento o suministro de agua. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_72" name="verificacion_72" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_72" name="observacion_72" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_73">73. Se lleva Registro de Limpieza y desinfección diligenciado de acuerdo al Plan de Saneamiento. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_73" name="verificacion_73" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_73" name="observacion_73" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_74">74. Se garantiza que los equipos para el almacenamiento de los alimentos y utensilios se encuentran en adecuadas condiciones de limpieza y desinfección. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_74" name="verificacion_74" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_74" name="observacion_74" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_75">75. Se evidencia certificado de control de plagas en la unidad de servicio vigente. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_75" name="verificacion_75" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_75" name="observacion_75" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_76">76. Se observa registros de las actividades realizadas y tipo de sustancias empleadas. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_76" name="verificacion_76" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_76" name="observacion_76" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_77">77. Se evidencia el formato para el registro semanal de las actividades para control de plagas debidamente diligenciado. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_77" name="verificacion_77" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_77" name="observacion_77" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_78">78. Se evidencia cronograma para el control de plagas en el comedor escolar (fumigación, desratización y desinsectación) y se cumple con el mismo. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_78" name="verificacion_78" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_78" name="observacion_78" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_79">79. Las instalaciones y/o alimentos se encuentran libres de daños causados por plagas o roedores (ratas, hormigas, palomas, cucarachas, etc.). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_79" name="verificacion_79" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_79" name="observacion_79" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_80">80. Se garantiza el adecuado almacenamiento de los elementos y sustancias de limpieza y desinfección en contenedores y las áreas establecidas con hoja o carta de seguridad, debidamente identificadas evitando el contacto con las materias primas, alimentos preparados, utensilios y menaje. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_80" name="verificacion_80" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_80" name="observacion_80" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_81">81. Se evidencia que las materias primas crudas tales como verduras, hortalizas, frutas y huevos se lavan y/o desinfectan antes de su preparación. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_81" name="verificacion_81" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_81" name="observacion_81" placeholder="Observaciones">
+            </div>
+        </div>
+
+        <h2>COMPONENTE: TRANSPORTE DE ALIMENTOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_82">82. El transporte garantiza el mantenimiento de las condiciones de conservación requeridas por el producto alimentario: refrigeración, congelación, recipientes o canastillas de material sanitario con tapa, etc., y cumple con la normatividad vigente. (Resolución 2505 de 2004), no se transportan conjuntamente en un mismo vehículo alimentos o materias primas con sustancias peligrosas y otras sustancias que por su naturaleza representen riesgo de contaminación del alimento o la materia prima (incluye productos de aseo y pipas de gas). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_82" name="verificacion_82" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_82" name="observacion_82" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_83">83. Las materias primas son transportadas en canastillas plásticas limpias. El transportador deja copia del registro del previo lavado y desinfección de las mismas desde la bodega hasta la Institución Educativa Oficial. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_83" name="verificacion_83" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_83" name="observacion_83" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_84">84. Los vehículos se encuentran en adecuadas condiciones sanitarias, de aseo y operación para el transporte de los alimentos. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_84" name="verificacion_84" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_84" name="observacion_84" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_85">85. El vehículo tiene concepto sanitario favorable, formato de limpieza y desinfección del vehículo y formulario de inscripción sanitaria para vehículos transportadores de alimentos y bebidas. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_85" name="verificacion_85" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_85" name="observacion_85" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_86">86. El transporte de alimentos cuenta con aviso del Programa de Alimentación Escolar (PAE). (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_86" name="verificacion_86" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_86" name="observacion_86" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_87">87. El transportador (conductor y ayudante) cuenta con registro de capacitación continua en aspectos de BPM según anexo 24, examen médico-ocupacional, vestimenta limpia y adecuada (elementos de protección personal), de acuerdo a la normatividad vigente. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_87" name="verificacion_87" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_87" name="observacion_87" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_88">88. El personal manipulador puede verificar la cantidad de materia prima recepcionada, ya sea con báscula en la IOE o vehículo. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_88" name="verificacion_88" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_88" name="observacion_88" placeholder="Observaciones">
+            </div>
+        </div>        
+
+        <h2>COMPONENTE: EQUIPO Y UTENSILIOS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_89">89. Los equipos (estufa, licuadora, equipo de frío), utilizados en la preparación se encuentran funcionando adecuadamente y cuentan con hoja de vida. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_89" name="verificacion_89" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_89" name="observacion_89" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_90">90. Los equipos de medición (gramera, termómetro y balanza) cuentan con registro de verificación de masa y temperatura. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_90" name="verificacion_90" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_90" name="observacion_90" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_91">91. Las neveras, congeladores y demás equipos de almacenamiento cuentan con registro de temperatura (mínimo una vez al día). (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_91" name="verificacion_91" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_91" name="observacion_91" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_92">92. Los utensilios tales como tablas, cucharas, ollas y demás menaje están fabricados con materiales sanitarios, resistentes a la corrosión de fácil limpieza y desinfección y se encuentran en buen estado. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_92" name="verificacion_92" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_92" name="observacion_92" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_93">93. Se cuenta con los equipos y utensilios mínimos requeridos para la prestación del servicio según modalidad. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_93" name="verificacion_93" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_93" name="observacion_93" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_94">94. El operador garantiza como mínimo el 60% del menaje (platos, vasos, cucharas) y equipos (nevera, estufa, licuadora y congelador) correspondientes a lo focalizado en la IEO y se evidencia la relación en la carpeta técnica. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_94" name="verificacion_94" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_94" name="observacion_94" placeholder="Observaciones">
+            </div>
+        </div>        
+
+        <h2>COMPONENTE: INSUMOS E IMPLEMENTOS DE ASEO</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_95">95. Se evidencia dotación de los elementos de higiene personal (jabón líquido antibacterial inoloro, papel higiénico). (LEVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_95" name="verificacion_95" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_95" name="observacion_95" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_96">96. Se evidencia que los implementos de limpieza y desinfección (desinfectante líquido, detergente biodegradable para el lavado de platos inoloro, esponja de fibra abrasiva media, limpiones en microfibra, toallas absorbentes, jabón de aseo general inoloro, bolsas plásticas de color blanco, verde y negro, esponja plástica para el lavado de ollas, escoba, trapero y recogedor) se encuentran en la cantidad requerida de acuerdo al cupo atendido para complemento alimentario y jornada única, según corresponda en la unidades de servicio especificados en la resolución 335 del 23 de diciembre del 2021. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_96" name="verificacion_96" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_96" name="observacion_96" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <div class="verificacion-group">
+            <label for="verificacion_97">97. Los implementos de aseo permanecen almacenados en lugares separados de las materias primas y alimentos, en adecuadas condiciones y son reemplazados cada vez que se requiera o se evidencie su deterioro o desgaste, se evidencia soporte de solicitud de reemplazo. (GRAVE)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_97" name="verificacion_97" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_97" name="observacion_97" placeholder="Observaciones">
+            </div>
+        </div>
+        
+        <h2>COMPONENTE: OTROS</h2>
+
+        <div class="verificacion-group">
+            <label for="verificacion_98">98. Se evidencia diligenciado el formato de registro diario de asistencia por parte del operador. (MODERADO)</label>
+            <div class="verificacion-controls">
+                <select id="verificacion_98" name="verificacion_98" required>
+                    <option value="1">Cumple</option>
+                    <option value="0">No Cumple</option>
+                    <option value="">No Aplica</option>
+                </select>
+                <input type="text" id="observacion_98" name="observacion_98" placeholder="Observaciones">
+            </div>
+        </div>
+        
+
+        <button type="submit">Guardar</button>  
+    </form>
+</body>
+</html>
